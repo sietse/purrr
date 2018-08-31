@@ -3,14 +3,20 @@
 #' @description
 #'
 #' The map functions transform their input by applying a function to
-#' each element and returning a vector the same length as the input.
+#' each element and returning a vector, list, or data frame the same
+#' length as the input.
 #'
 #' * `map()`, `map_if()` and `map_at()` always return a list. See the
 #'   [modify()] family for versions that return an object of the same
 #'   type as the input.
 #'
-#'   The `_if` and `_at` variants take a predicate function `.p` that
-#'   determines which elements of `.x` are transformed with `.f`.
+#'   `map_if` takes a predicate function `.p` that determines which elements of
+#'   `.x` are transformed with `.f`. Nonmatching elements pass through
+#'   unchanged.
+#'
+#'   `map_at` takes a character vector of names or a numeric vector of
+#'   positions that determines which elements of `x` are transformed with `.f`.
+#'   Nonmatching elements pass through unchanged.
 #'
 #' * `map_lgl()`, `map_int()`, `map_dbl()` and `map_chr()` return
 #'   vectors of the corresponding type (or die trying).
@@ -33,15 +39,22 @@
 #'   positions to include, or a negative numeric vector of positions to
 #'   exlude. Only those elements corresponding to `.at` will be modified.
 #' @param ... Additional arguments passed on to `.f`.
-#' @return All functions return a vector the same length as `.x`.
+#' @return All functions return a list, vector, or data frame with the same
+#'   length as `.x`.
 #'
-#'   `map()` returns a list, `map_lgl()` a logical vector, `map_int()` an
-#'   integer vector, `map_dbl()` a double vector, and `map_chr()` a character
-#'   vector. The output of `.f` will be automatically typed upwards,
-#'   e.g. logical -> integer -> double -> character.
+#'   `map()`, `map_if()`, and `map_at()` all return a list.
+#'
+#'   `map_lgl()` returns a logical vector, `map_int()` an integer vector,
+#'   `map_dbl()` a double vector, and `map_chr()` a character vector. If the
+#'   output of `.f` is of a more specific type it will be automatically
+#'   converted upwards, e.g. logical -> integer -> double -> character.
+#'
+#'   `map_dfr()` returns a data frame whose row count matches the length of
+#'   `.x`. `map_dfc()` returns a data frame whose column count matches the
+#'   length of `x.`.
 #'
 #'   `walk()` returns the input `.x` (invisibly). This makes it easy to
-#'   use in pipe.
+#'   use in a pipeline.
 #' @export
 #' @family map variants
 #' @examples
